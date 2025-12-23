@@ -267,8 +267,8 @@ export default function FieldsSidebar({ editorRef }: FieldsSidebarProps) {
   };
 
   return (
-    <div className="flex h-full w-80 flex-col border-r bg-background">
-      <CardHeader className="border-b">
+    <div className="flex w-80 flex-col border bg-background rounded-r-xl">
+      <CardHeader className="border-b p-4">
         <CardTitle className="text-lg">Dynamic Fields</CardTitle>
         <CardDescription>
           Manage and insert fields into your document

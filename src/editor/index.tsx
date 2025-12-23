@@ -1,8 +1,9 @@
 "use client";
-import { useId } from "react";
+import { useId, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { useTheme } from "next-themes";
+import { convertToHtml } from "mammoth";
 
 interface DocEditorProps {
   editorRef: React.RefObject<TinyMCEEditor | null>;
@@ -12,9 +13,48 @@ export default function DocEditor({ editorRef }: DocEditorProps) {
   const editorId = `doc-editor-${useId().replace(/:/g, "_")}`;
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportDocx = async (file: File) => {
+    if (!file) return;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await convertToHtml({ arrayBuffer });
+
+      if (editorRef.current) {
+        // Insert the converted HTML into the editor
+        editorRef.current.setContent(result.value);
+      }
+
+      // Show any warnings from the conversion
+      if (result.messages.length > 0) {
+        console.log("Conversion messages:", result.messages);
+      }
+    } catch (error) {
+      console.error("Error importing DOCX:", error);
+      alert("Failed to import document. Please try again.");
+    }
+  };
 
   return (
     <div className="doc-editor h-full w-full">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".docx"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            await handleImportDocx(file);
+          }
+          // Reset the file input
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        }}
+        className="hidden"
+      />
       <Editor
         key={isDarkMode ? "dark" : "light"}
         id={editorId}
@@ -26,6 +66,16 @@ export default function DocEditor({ editorRef }: DocEditorProps) {
               editorRef as React.MutableRefObject<TinyMCEEditor | null>
             ).current = editor;
           }
+
+          // Register custom button for importing DOCX
+          editor.ui.registry.addButton("importdocx", {
+            text: "Import DOCX (beta)",
+            icon: "new-document",
+            tooltip: "Import Content From Word Document",
+            onAction: () => {
+              fileInputRef.current?.click();
+            },
+          });
         }}
         initialValue="<p>Start typing your document here. Click on fields in the left panel to insert dynamic content.</p>"
         init={{
@@ -64,7 +114,7 @@ export default function DocEditor({ editorRef }: DocEditorProps) {
           editimage_cors_hosts: ["picsum.photos"],
           menubar: "file edit view insert format tools table help",
           toolbar:
-            "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
+            "importdocx | undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
           autosave_ask_before_unload: true,
           autosave_interval: "30s",
           autosave_prefix: "{path}{query}-{id}-",
