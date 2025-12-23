@@ -18,7 +18,7 @@ export default function DocEditor({ editorRef }: DocEditorProps) {
       <Editor
         key={isDarkMode ? "dark" : "light"}
         id={editorId}
-        tinymceScriptSrc="/tinymce/tinymce.min.js"
+        tinymceScriptSrc="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"
         licenseKey="gpl"
         onInit={(_evt, editor) => {
           if (editorRef) {
