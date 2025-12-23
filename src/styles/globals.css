@@ -126,3 +126,85 @@
     @apply bg-background text-foreground;
   }
 }
+
+ .doc-editor .tox {
+   font-family: var(--font-sans);
+ }
+
+ .doc-editor .tox .tox-editor-container,
+ .doc-editor .tox .tox-toolbar-overlord,
+ .doc-editor .tox .tox-toolbar__primary,
+ .doc-editor .tox .tox-menubar {
+   background-color: var(--background);
+ }
+
+ .doc-editor .tox .tox-toolbar,
+ .doc-editor .tox .tox-toolbar__overflow,
+ .doc-editor .tox .tox-menubar {
+   border-bottom: 1px solid var(--border);
+ }
+
+ .doc-editor .tox .tox-editor-header {
+   box-shadow: none;
+ }
+
+ .doc-editor .tox .tox-tbtn {
+   border-radius: var(--radius-sm);
+ }
+
+ .doc-editor .tox .tox-tbtn:hover {
+   background-color: var(--accent);
+   color: var(--accent-foreground);
+ }
+
+ .doc-editor .tox .tox-tbtn--enabled,
+ .doc-editor .tox .tox-tbtn--enabled:hover {
+   background-color: var(--secondary);
+   color: var(--secondary-foreground);
+ }
+
+ .doc-editor .tox .tox-tbtn svg,
+ .doc-editor .tox .tox-tbtn__select-chevron svg {
+   fill: currentColor;
+ }
+
+ .doc-editor .tox .tox-mbtn {
+   border-radius: var(--radius-sm);
+ }
+
+ .doc-editor .tox .tox-mbtn:hover {
+   background-color: var(--accent);
+   color: var(--accent-foreground);
+ }
+
+ .doc-editor .tox .tox-statusbar {
+   border-top: 1px solid var(--border);
+ }
+
+ .doc-editor .tox .tox-edit-area::before {
+   border: 1px solid var(--border);
+ }
+
+ .doc-editor .tox .tox-dialog,
+ .doc-editor .tox .tox-menu,
+ .doc-editor .tox .tox-collection {
+   border-radius: var(--radius-lg);
+   border-color: var(--border);
+ }
+
+ .doc-editor .tox .tox-dialog__header,
+ .doc-editor .tox .tox-dialog__footer {
+   background-color: var(--popover);
+   color: var(--popover-foreground);
+ }
+
+ .doc-editor .tox .tox-dialog__body {
+   background-color: var(--popover);
+   color: var(--popover-foreground);
+ }
+
+ .doc-editor .tox .tox-collection__item--active,
+ .doc-editor .tox .tox-collection__item:hover {
+   background-color: var(--accent);
+   color: var(--accent-foreground);
+ }

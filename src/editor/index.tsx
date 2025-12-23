@@ -1,22 +1,33 @@
 "use client";
-import { useId, useRef } from "react";
+import { useId } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
+import { useTheme } from "next-themes";
 
-export default function DocEditor() {
-  const editorRef = useRef<TinyMCEEditor | null>(null);
+interface DocEditorProps {
+  editorRef: React.RefObject<TinyMCEEditor | null>;
+}
+
+export default function DocEditor({ editorRef }: DocEditorProps) {
   const editorId = `doc-editor-${useId().replace(/:/g, "_")}`;
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === "dark";
 
   return (
-    <div className="w-full">
+    <div className="doc-editor h-full w-full">
       <Editor
+        key={isDarkMode ? "dark" : "light"}
         id={editorId}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
         onInit={(_evt, editor) => {
-          editorRef.current = editor;
+          if (editorRef) {
+            (
+              editorRef as React.MutableRefObject<TinyMCEEditor | null>
+            ).current = editor;
+          }
         }}
-        initialValue="asas"
+        initialValue="<p>Start typing your document here. Click on fields in the left panel to insert dynamic content.</p>"
         init={{
           plugins: [
             "accordion",
@@ -48,9 +59,8 @@ export default function DocEditor() {
             "visualblocks",
             "visualchars",
             "wordcount",
-            /* Premium plugins for demo purposes only */
-            "mediaembed",
           ],
+          resize: true,
           editimage_cors_hosts: ["picsum.photos"],
           menubar: "file edit view insert format tools table help",
           toolbar:
@@ -97,15 +107,15 @@ export default function DocEditor() {
               });
             }
           },
-          height: 1024,
+          min_height: 800,
           image_caption: true,
           quickbars_selection_toolbar:
             "bold italic | quicklink h2 h3 blockquote quickimage quicktable",
           noneditable_class: "mceNonEditable",
           toolbar_mode: "sliding",
           contextmenu: "link image table",
-          //skin: useDarkMode ? "oxide-dark" : "oxide",
-          //content_css: useDarkMode ? "dark" : "default",
+          skin: isDarkMode ? "oxide-dark" : "oxide",
+          content_css: isDarkMode ? "dark" : "default",
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
           promotion: false,
